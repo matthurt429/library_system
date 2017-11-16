@@ -2,7 +2,5 @@
   box-sizing: border-box; }
 
 .books .table .book img {
-  max-height: 25%; }
-
-#templates {
-  display: none; }
+  max-height: 25%;
+  max-width: 30%; }
