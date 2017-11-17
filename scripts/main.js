@@ -1,3 +1,5 @@
+/* global Requests */
+
 var bookTemplate = $('#templates .book')
 var bookTable = $('#bookTable')
 var borrowerTemplate = $('#templates .borrower')
@@ -6,8 +8,13 @@ var borrowerTable = $('#borrowerTable')
 // library id is 135
 
 var libId = 135
-var baseUrl = `https://floating-woodland-64068.herokuapp.com/libraries/${libId}`
+var requests = new Requests(libId)
+// var baseUrl = `https://floating-woodland-64068.herokuapp.com/libraries/${libId}`
 
+var dataModel = {
+  // books : [],
+  // borrowers: [],
+}
 
 function addBookToPage(bookData){
   var book = bookTemplate.clone()
@@ -15,119 +22,101 @@ function addBookToPage(bookData){
   book.find('.bookTitle').text(bookData.title)
   book.find('.bookImage').attr('src', bookData.image_url)
   book.find('.bookImage').attr('alt' , bookData.title)
-  book.find('.delteButton').on('click', (event) => {
+  book.find('.deleteButton').on('click', (event) => {
     var deleteBook = $(event.currentTarget).parent().parent()
-    console.log(deleteBook)
-    var deleteBookRequest = $.ajax({
-      type: 'DELETE',
-      url:`${baseUrl}/books/${deleteBook.attr('data-id')}`
-    })
-    deleteBookRequest.done(function(){
+    var bookId = deleteBook.attr('data-id')
+
+    requests.deleteBook({id: bookId}).then(function(){
       deleteBook.remove()
     })
   })
   bookTable.append(book)
 }
 
-var getBooksRequest = $.ajax({
-  type:'GET',
-  url: `${baseUrl}/books`,
+
+var booksPromise = requests.getBooks().then((dataFromServer) => {
+  dataModel.books = dataFromServer
+  // dataFromServer.forEach((bookData) => {
+  //   addBookToPage(bookData)
+  // })
 })
 
-getBooksRequest.done((dataFromServer) => {
-  dataFromServer.forEach((bookData) => {
-    addBookToPage(bookData)
-  })
-  $('.delteButton').on('click', (event) => {
-    var deleteBook = $(event.currentTarget).parent().parent()
-    console.log(deleteBook)
-    var deleteBookRequest = $.ajax({
-      type: 'DELETE',
-      url:`${baseUrl}/books/${deleteBook.attr('data-id')}`
-    })
-    deleteBookRequest.done(function(){
-      deleteBook.remove()
-    })
+$('.deleteButton').on('click', (event) => {
+  var deleteBorrower = $(event.currentTarget).parent().parent()
+  var borrowerId = deleteBorrower.attr('data-id')
+
+  requests.deleteBorrower({id: borrowerId}).then(function(){
+    deleteBorrower.remove()
   })
 })
 
 function addBorrowerToPage(borrowerData){
   var borrower = borrowerTemplate.clone()
   borrower.attr('data-id' , borrowerData.id)
-  borrower.find('.borrowerFirstName').text(borrowerData.firstname)
-  borrower.find('.borrowerLastName').text(borrowerData.lastname)
-  borrower.find('.delteButton').on('click', (event) => {
-    var deleteBook = $(event.currentTarget).parent().parent()
-    console.log(deleteBook)
-    var deleteBookRequest = $.ajax({
-      type: 'DELETE',
-      url:`${baseUrl}/borrowers/${deleteBook.attr('data-id')}`
-    })
-    deleteBookRequest.done(function(){
-      deleteBook.remove()
+  borrower.find('.borrowerName').text(`${borrowerData.firstname}  ${borrowerData.lastname}`)
+  borrowerTable.append(borrower)
+  borrower.find('.deleteButton').on('click', (event) => {
+    var deleteBorrower = $(event.currentTarget).parent().parent()
+    var borrowerId = deleteBorrower.attr('data-id')
+
+    requests.deleteBorrower({id: borrowerId}).then(function(){
+      deleteBorrower.remove()
     })
   })
-  borrowerTable.append(borrower)
 }
 
-var getBorrowersRequest = $.ajax({
-  type:'GET',
-  url:`${baseUrl}/borrowers`,
+var borrowersPromise = requests.getBorrowers().then((dataFromServer) => {
+  dataModel.borrowers = dataFromServer
+  // dataFromServer.forEach((borrowerData) => {
+  //   addBorrowerToPage(borrowerData)
+  // })
 })
 
-getBorrowersRequest.done((dataFromServer) =>{
-  dataFromServer.forEach((borrowerData) => {
-    addBorrowerToPage(borrowerData)
-  })
-  $('.delteButton').on('click', (event) => {
-    var deleteBook = $(event.currentTarget).parent().parent()
-    console.log(deleteBook)
-    var deleteBookRequest = $.ajax({
-      type: 'DELETE',
-      url:`${baseUrl}/borrowers/${deleteBook.attr('data-id')}`
-    })
-    deleteBookRequest.done(function(){
-      deleteBook.remove()
-    })
+$('.deleteButton').on('click', (event) => {
+  var deleteBook = $(event.currentTarget).parent().parent()
+  var bookId = deleteBook.attr('data-id')
+
+  requests.deleteBook({id: bookId}).then(function(){
+    deleteBook.remove()
   })
 })
 
 
-$('#createBookButton').on('click', (event) => {
+$('#createBookButton').on('click', () => {
   var bookData = {}
   bookData.title = $('.addBookTitle').val()
   bookData.description = $('.addBookDescription').val()
   bookData.image_url = $('.addBookImageUrl').val()
 
-  var createBookRequest =  $.ajax({
-    type: 'POST',
-    url:`${baseUrl}/books`,
-    data:{
-      book:bookData
-    }
-  })
-  createBookRequest.done((dataFromServer) =>{
+
+  requests.createBook(bookData).then((dataFromServer) => {
     addBookToPage(dataFromServer)
     $('#addBookModal').modal('hide')
     $('#addBookForm')[0].reset()
   })
+
 })
 
-$('#createBorrowerButton').on('click', (event) => {
+$('#createBorrowerButton').on('click', () => {
   var borrowerData = {}
   borrowerData.firstname = $('.addBorrowerFirstName').val()
   borrowerData.lastname = $('.addBorrowerLastName').val()
 
-  var createBorrowerRequest = $.ajax({
-    type: 'POST',
-    url:`${baseUrl}/borrowers`,
-    data:{
-      borrower:borrowerData
-    }
-  })
-  createBorrowerRequest.done((dataFromServer) =>{
+  requests.createBorrower(borrowerData).then((dataFromServer) => {
     addBorrowerToPage(dataFromServer)
     $('#addBorrowerModal').modal('hide')
     $('#addBorrowerForm')[0].reset()
+  })
+})
+
+var promises = [booksPromise, borrowersPromise]
+
+Promise.all(promises).then(() => {
+  dataModel.borrowers.forEach((borrowerData) => {
+    addBorrowerToPage(borrowerData)
+  })
+
+  dataModel.books.forEach((bookData) => {
+    addBookToPage(bookData)
   })
 })
