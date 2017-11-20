@@ -115,17 +115,27 @@
           <tr class="book" data-id="some-id">
             <td><img class="img-responsive bookImage" src="" alt=""></td>
             <td class="bookTitle">Title of book </td>
-            <td class="borrowerName">Borrower</td>
-            <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right delteButton"></div></td>
+            <td>
+                <div class="form-group">
+                  <select class="form-control borrowerSelect">
+                    <option selected>Available</option>
+                  </select>
+              </div>
+            </td>
+            <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right deleteButton"></div></td>
           </tr>
 
 
           <tr class="borrower" data-id="some-id">
-            <td class="borrowerFirstName">First name</td>
-            <td class="borrowerLastName">Last name</td>
-            <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right delteButton"></div></td>
+            <td class="borrowerName">First name</td>
+            <td><span class="badge">0</span></td>
+            <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right deleteButton"></div></td>
           </tr>
         </table>
+
+        <select id="" name="">
+          <option value="some-id" class="borrowerOption">Name</option>
+        </select>
       </section>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
