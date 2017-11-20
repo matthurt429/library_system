@@ -4,7 +4,7 @@ var bookTemplate = $('#templates .book')
 var bookTable = $('#bookTable')
 var borrowerTemplate = $('#templates .borrower')
 var borrowerTable = $('#borrowerTable')
-
+var borrowerOptionTemplate = $('#templates .borrowerOption')
 // library id is 135
 
 var libId = 135
@@ -17,7 +17,7 @@ var dataModel = {
 }
 
 function addBookToPage(bookData){
-  var book = bookTemplate.clone()
+  var book = bookTemplate.clone(true , true)
   book.attr('data-id', bookData.id)
   book.find('.bookTitle').text(bookData.title)
   book.find('.bookImage').attr('src', bookData.image_url)
@@ -51,10 +51,14 @@ $('.deleteButton').on('click', (event) => {
 })
 
 function addBorrowerToPage(borrowerData){
+  //ADDS THE BORROWER TO THE BORROWER TABLE
+  var fullName = `${borrowerData.firstname}  ${borrowerData.lastname}`
   var borrower = borrowerTemplate.clone()
   borrower.attr('data-id' , borrowerData.id)
-  borrower.find('.borrowerName').text(`${borrowerData.firstname}  ${borrowerData.lastname}`)
+  borrower.find('.borrowerName').text(fullName)
   borrowerTable.append(borrower)
+
+  //DELETES BORROWER
   borrower.find('.deleteButton').on('click', (event) => {
     var deleteBorrower = $(event.currentTarget).parent().parent()
     var borrowerId = deleteBorrower.attr('data-id')
@@ -63,6 +67,12 @@ function addBorrowerToPage(borrowerData){
       deleteBorrower.remove()
     })
   })
+
+  //ADDS BORROWER TO DROP DOWN
+  var borrowerOption = borrowerOptionTemplate.clone()
+  borrowerOption.text(fullName)
+  borrowerOption.attr('value', borrowerData.id)
+  $('.borrowerSelect').append(borrowerOption)
 }
 
 var borrowersPromise = requests.getBorrowers().then((dataFromServer) => {
@@ -119,6 +129,13 @@ Promise.all(promises).then(() => {
   dataModel.books.forEach((bookData) => {
     addBookToPage(bookData)
   })
+})
+
+$('.borrowerSelect').on('change', (event) => {
+  var borrowerId = $(event.target).val()
+  var bookId = $(event.target).parents('.book').attr('data-id')
+  console.log(borrowerId)
+  requests.updateBook({borrower_id: borrowerId, id: bookId})
 })
 
 

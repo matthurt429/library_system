@@ -1,11 +1,11 @@
 class Requests {
 
   constructor(libraryID) {
-    this.serverURL = "https://floating-woodland-64068.herokuapp.com/"
+    this.serverURL = "https://floating-woodland-64068.herokuapp.com"
     // this.serverURL = "http://localhost:3000"
     this.libraryID = libraryID
   }
-  
+
 
   /*
     POST -> /libraries
