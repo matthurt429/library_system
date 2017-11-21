@@ -15,13 +15,16 @@ var dataModel = {
   // books : [],
   // borrowers: [],
 }
-
+// THE BOOKDATA ARGUMENT IS PASSED IN FROM THE API
 function addBookToPage(bookData){
+  // ADD BOOKDATA TO A NEW TABLE ROW
   var book = bookTemplate.clone(true , true)
   book.attr('data-id', bookData.id)
   book.find('.bookTitle').text(bookData.title)
   book.find('.bookImage').attr('src', bookData.image_url)
   book.find('.bookImage').attr('alt' , bookData.title)
+
+  // THIS DELETES BOOKS
   book.find('.deleteButton').on('click', (event) => {
     var deleteBook = $(event.currentTarget).parent().parent()
     var bookId = deleteBook.attr('data-id')
@@ -29,8 +32,14 @@ function addBookToPage(bookData){
     requests.deleteBook({id: bookId}).then(function(){
       deleteBook.remove()
     })
+    decrementBorrowerCount(bookData.borrower_id)
   })
   bookTable.append(book)
+  // select the correct borrower for this book
+  if(bookData.borrower_id !== null) {
+    book.find(`.borrowerOption[value="${bookData.borrower_id}"]`).attr('selected', 'selected')
+    incrementBorrowerCount(bookData.borrower_id)
+  }
 }
 
 
@@ -49,11 +58,11 @@ $('.deleteButton').on('click', (event) => {
     deleteBorrower.remove()
   })
 })
-
+// THE borrowerdata  argument is passed in from the api
 function addBorrowerToPage(borrowerData){
   //ADDS THE BORROWER TO THE BORROWER TABLE
   var fullName = `${borrowerData.firstname}  ${borrowerData.lastname}`
-  var borrower = borrowerTemplate.clone()
+  var borrower = borrowerTemplate.clone(true, true)
   borrower.attr('data-id' , borrowerData.id)
   borrower.find('.borrowerName').text(fullName)
   borrowerTable.append(borrower)
@@ -131,9 +140,69 @@ Promise.all(promises).then(() => {
   })
 })
 
+
+function findBookModel(bookId){
+  for (var i = 0; i < dataModel.books.length; i++) {
+    if(dataModel.books[i].id === bookId) return dataModel.books[i]
+  }
+}
+
 $('.borrowerSelect').on('change', (event) => {
   var borrowerId = $(event.target).val()
   var bookId = $(event.target).parents('.book').attr('data-id')
+  var oldBorrowerId = findBookModel(Number(bookId)).borrower_id
+  console.log(oldBorrowerId)
   console.log(borrowerId)
-  requests.updateBook({borrower_id: borrowerId, id: bookId})
+  requests.updateBook({borrower_id: borrowerId, id: bookId}).then(() => {
+    incrementBorrowerCount(borrowerId)
+    findBookModel(Number(bookId)).borrower_id = Number(borrowerId)
+    decrementBorrowerCount(oldBorrowerId)
+  })
+})
+
+function incrementBorrowerCount(borrowerId){
+  var borrowerRow = $(`.borrower[data-id = "${borrowerId}"]`)
+  var badgeValue = Number(borrowerRow.find('.badge').text())
+  borrowerRow.find('.badge').text(badgeValue + 1)
+}
+
+function decrementBorrowerCount(borrowerId){
+  var borrowerRow = $(`.borrower[data-id = "${borrowerId}"]`)
+  var badgeValue = Number(borrowerRow.find('.badge').text())
+  borrowerRow.find('.badge').text(badgeValue - 1)
+}
+
+$('.addBookImageUrl').on('input', (event) => {
+  var url = $(event.target).val()
+  url.length > 0 ? $('.imagePreview').removeClass('hidden') : $('.imagePreview').addClass('hidden')
+  $('.imagePreview img').attr('src', url)
+})
+
+$('.borrower').on('click', (event) => {
+  var borrowerId = $(event.currentTarget).attr('data-id')
+  var borrowerName = $(event.currentTarget).find('.borrowerName').text()
+  var viewBorrowerModal = $('#viewBorrowerModal')
+  viewBorrowerModal.find('#viewBorrowerModalLabel').text(borrowerName)
+  viewBorrowerModal.find('.borrowedBooks').text('')
+  dataModel.books.forEach((book) => {
+    if(book.borrower_id === Number(borrowerId)){
+      viewBorrowerModal.find('.borrowedBooks').append('<li>' + book.title + '</li>')
+    }
+  })
+  var noBooksMsg = viewBorrowerModal.find('.noBooksMsg')
+  $('.borrowedBooks li').length === 0 ? noBooksMsg.removeClass('hidden') : noBooksMsg.addClass('hidden')
+  viewBorrowerModal.modal('show')
+})
+
+$('.searchBox input').on('input', (event) =>{
+  var searchString = $(event.target).val().toLowerCase()
+
+  dataModel.books.forEach((book) =>{
+    var bookRow = $(`.book[data-id="${book.id}"]`)
+    if(book.title.toLowerCase().includes(searchString) || book.description.toLowerCase().includes(searchString)){
+      bookRow.removeClass('hidden')
+    }else{
+      bookRow.addClass('hidden')
+    }
+  })
 })

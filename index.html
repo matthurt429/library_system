@@ -1,145 +1,191 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NEW PROJECT TEMPLATE</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NEW PROJECT TEMPLATE</title>
 
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/main.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/main.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="page-header">
-        <h1>Matt's library</h1>
-      </div>
-      <div class="row">
-        <div class="col-md-7 books">
-          <div class="panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">
-              <h2>
-                Books
-                <button class="btn btn-success glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#addBookModal"></button>
-              </h2>
-              </div>
-            <!-- Table -->
-            <table id="bookTable" class="table table-striped">
-              <tr></tr>
-            </table>
-          </div>
-        </div>
-        <div class="col-md-5">
-          <div class="panel panel-default">
-                <!-- Default panel contents -->
-              <div class="panel-heading">
-                <h2>
-                  Borrowers
-                  <div class="btn btn-success glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#addBorrowerModal"></div>
-                </h2>
-              </div>
-                <!-- Table -->
-              <table id="borrowerTable" class="table table-striped">
-                <tr></tr>
-                </tr>
-              </table>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+  <div class="container">
+
+    <div class="page-header">
+      <h1>
+        Matt's library
+
+        <div class="col-md-3 searchBox input-group pull-right ">
+
+          <span class="input-group-addon " id="sizing-addon2">
+            <div class="glyphicon glyphicon-search">
+
             </div>
+          </span>
+
+          <input type="text" class="bookSearch form-control glyphicon glyphicon-search">
+        </div>
+      </h1>
+
+    </div>
+    <div class="row">
+      <div class="col-md-7 books">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">
+            <h2>
+              Books
+              <button class="btn btn-success glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#addBookModal"></button>
+            </h2>
           </div>
+          <!-- Table -->
+          <table id="bookTable" class="table table-striped">
+            <tr></tr>
+          </table>
         </div>
       </div>
-
-            <!-- MODALS -->
-      <div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="addBookModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="addBookModalLabel">Add Book</h4>
-            </div>
-            <div class="modal-body">
-              <form id="addBookForm">
-                <div class="form-group">
-                  <input class="form-control addBookTitle" type="text" name="bookTitle" placeholder="Book Title">
-                </div>
-                <div class="form-group">
-                  <textarea class="form-control addBookDescription" name="bookDescription" placeholder="Description" rows="8"></textarea>
-                </div>
-                <div class="form-group">
-                  <input class="form-control addBookImageUrl" type="text" name="bookImageUrl" placeholder="Image URL">
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button id="createBookButton" type="button" class="btn btn-primary">Add</button>
-            </div>
+      <div class="col-md-5">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">
+            <h2>
+              Borrowers
+              <div class="btn btn-success glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#addBorrowerModal"></div>
+            </h2>
           </div>
-        </div>
-      </div>
-
-
-      <div class="modal fade" id="addBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="addBorrowerModal">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="addBorrowerLabel">Add Borrower</h4>
-            </div>
-            <div class="modal-body">
-              <form id="addBorrowerForm">
-                <div class="form-group">
-                  <input class="form-control addBorrowerFirstName" type="text" name="borrowerFirstName" placeholder="First name">
-                </div>
-                <div class="form-group">
-                  <input class="form-control addBorrowerLastName" type="text" name="borrowerLastName" placeholder="Last name">
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button id="createBorrowerButton" type="button" class="btn btn-primary">Add</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- TEMPLATES -->
-
-      <section id="templates" class="hidden">
-        <table>
-          <tr class="book" data-id="some-id">
-            <td><img class="img-responsive bookImage" src="" alt=""></td>
-            <td class="bookTitle">Title of book </td>
-            <td>
-                <div class="form-group">
-                  <select class="form-control borrowerSelect">
-                    <option selected>Available</option>
-                  </select>
-              </div>
-            </td>
-            <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right deleteButton"></div></td>
-          </tr>
-
-
-          <tr class="borrower" data-id="some-id">
-            <td class="borrowerName">First name</td>
-            <td><span class="badge">0</span></td>
-            <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right deleteButton"></div></td>
+          <!-- Table -->
+          <table id="borrowerTable" class="table table-striped">
+            <tr></tr>
           </tr>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <select id="" name="">
-          <option value="some-id" class="borrowerOption">Name</option>
-        </select>
-      </section>
+<!-- MODALS -->
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="scripts/min/requests-min.js" charset="utf-8"></script>
-    <script src="scripts/min/main-min.js" charset="utf-8"></script>
-  </body>
+<!-- ADD BOOK MODEL -->
+<div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="addBookModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addBookModalLabel">Add Book</h4>
+      </div>
+      <div class="modal-body">
+        <form id="addBookForm">
+          <div class="form-group">
+            <input class="form-control addBookTitle" type="text" name="bookTitle" placeholder="Book Title">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control addBookDescription" name="bookDescription" placeholder="Description" rows="8"></textarea>
+          </div>
+          <div class="form-group">
+            <input class="form-control addBookImageUrl" type="text" name="bookImageUrl" placeholder="Image URL">
+          </div>
+        </form>
+
+        <div class="imagePreview hidden">
+          <p>Image Preview:</p>
+          <img src="" alt="bad url">
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="createBookButton" type="button" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD BORROWER MODAL -->
+<div class="modal fade" id="addBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="addBorrowerModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addBorrowerLabel">Add Borrower</h4>
+      </div>
+      <div class="modal-body">
+        <form id="addBorrowerForm">
+          <div class="form-group">
+            <input class="form-control addBorrowerFirstName" type="text" name="borrowerFirstName" placeholder="First name">
+          </div>
+          <div class="form-group">
+            <input class="form-control addBorrowerLastName" type="text" name="borrowerLastName" placeholder="Last name">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="createBorrowerButton" type="button" class="btn btn-primary">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="viewBorrowerModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="viewBorrowerModalLabel">Borrower Name</h4>
+      </div>
+      <div class="modal-body">
+
+        <h3 class='noBooksMsg hidden'>No books checked out</h3>
+        <ul class="borrowedBooks">
+
+        </ul>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- TEMPLATES -->
+
+<section id="templates" class="hidden">
+  <table>
+    <tr class="book" data-id="some-id">
+      <td><img class="img-responsive bookImage" src="" alt=""></td>
+      <td class="bookTitle">Title of book </td>
+      <td>
+        <div class="form-group">
+          <select class="form-control borrowerSelect">
+            <option value=''>Available</option>
+          </select>
+        </div>
+      </td>
+      <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right deleteButton"></div></td>
+    </tr>
+
+
+    <tr class="borrower" data-id="some-id">
+      <td class="borrowerName">First name</td>
+      <td><span class="badge">0</span></td>
+      <td><div class="btn btn-danger glyphicon glyphicon-remove pull-right deleteButton"></div></td>
+    </tr>
+  </table>
+
+  <select id="" name="">
+    <option value="some-id" class="borrowerOption">Name</option>
+  </select>
+</section>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="scripts/min/requests-min.js" charset="utf-8"></script>
+<script src="scripts/min/main-min.js" charset="utf-8"></script>
+</body>
 </html>
